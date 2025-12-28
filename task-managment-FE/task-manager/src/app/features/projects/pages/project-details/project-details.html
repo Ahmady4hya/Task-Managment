@@ -1,0 +1,111 @@
+<div class="details-container">
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading project details...</p>
+    </div>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <span class="error-icon">⚠️</span>
+      <p class="error-message">{{ error }}</p>
+      <button class="btn-retry" (click)="loadProject()">
+        <span>🔄</span>
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (project && !loading && !error) {
+    <div class="details-content">
+      <div class="details-header">
+        <div class="header-top">
+          <button class="btn-back" (click)="goBack()">
+            <span class="back-icon">←</span>
+            Back to Projects
+          </button>
+          <div class="header-actions">
+            <button class="btn-edit" (click)="editProject()">
+              <span class="btn-icon">✏️</span>
+              Edit
+            </button>
+            <button class="btn-delete" (click)="deleteProject()">
+              <span class="btn-icon">🗑️</span>
+              Delete
+            </button>
+          </div>
+        </div>
+        <h1 class="project-title">{{ project.name }}</h1>
+        @if (project.description) {
+          <p class="project-description">{{ project.description }}</p>
+        }
+      </div>
+
+      <div class="stats-section">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ project.developerCount || 0 }}</div>
+            <div class="stat-label">Developers</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ project.taskCount || 0 }}</div>
+            <div class="stat-label">Tasks</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ project.createdAt | date: 'MMM d, y' }}</div>
+            <div class="stat-label">Created</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">📋</span>
+            Project Information
+          </h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Project Name</div>
+            <div class="info-value">{{ project.name }}</div>
+          </div>
+          @if (project.description) {
+            <div class="info-item">
+              <div class="info-label">Description</div>
+              <div class="info-value">{{ project.description }}</div>
+            </div>
+          }
+          <div class="info-item">
+            <div class="info-label">Total Developers</div>
+            <div class="info-value">{{ project.developerCount || 0 }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Total Tasks</div>
+            <div class="info-value">{{ project.taskCount || 0 }}</div>
+          </div>
+          @if (project.createdAt) {
+            <div class="info-item">
+              <div class="info-label">Created At</div>
+              <div class="info-value">{{ project.createdAt | date: 'medium' }}</div>
+            </div>
+          }
+          @if (project.updatedAt) {
+            <div class="info-item">
+              <div class="info-label">Last Updated</div>
+              <div class="info-value">{{ project.updatedAt | date: 'medium' }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
