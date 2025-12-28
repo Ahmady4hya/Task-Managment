@@ -1,0 +1,214 @@
+<div class="board-container">
+  <div class="board-header">
+    <h1 class="board-title">Task Board</h1>
+    <button class="btn-create" (click)="onCreateTask()">
+      <span class="btn-icon">+</span>
+      New Task
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading tasks...</p>
+    </div>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <span class="error-icon">⚠️</span>
+      <p class="error-message">{{ error }}</p>
+      <button class="btn-retry" (click)="loadTasks()">
+        <span>🔄</span>
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (!loading && !error) {
+    <div class="kanban-board">
+      <div class="kanban-column todo-column">
+        <div class="column-header">
+          <div class="column-title">
+            <span class="column-icon">📝</span>
+            <h2>{{ getStatusLabel(TaskStatus.TODO) }}</h2>
+          </div>
+          <span class="task-count">{{ todoTasks.length }}</span>
+        </div>
+        <div class="column-content">
+          @if (todoTasks.length > 0) {
+            @for (task of todoTasks; track task.id) {
+              <div class="task-card" (click)="onViewTask(task.id!)">
+                <div class="task-header">
+                  <h3 class="task-title">{{ task.title }}</h3>
+                  <div class="task-actions" (click)="$event.stopPropagation()">
+                    <button class="btn-action" (click)="onEditTask(task.id!)" title="Edit">
+                      ✏️
+                    </button>
+                    <button class="btn-action delete" (click)="onDeleteTask(task.id!)" title="Delete">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+                <div class="task-footer">
+                  @if (task.projectName) {
+                    <span class="task-project">
+                      <span class="project-icon">📁</span>
+                      {{ task.projectName }}
+                    </span>
+                  }
+                  @if (task.developerName) {
+                    <span class="task-assignee">
+                      <span class="assignee-icon">👤</span>
+                      {{ task.developerName }}
+                    </span>
+                  }
+                </div>
+                <div class="task-status-actions">
+                  <button 
+                    class="btn-status-change" 
+                    (click)="$event.stopPropagation(); onStatusChange(task.id!, TaskStatus.IN_PROGRESS)"
+                    title="Move to In Progress">
+                    → In Progress
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
+            <div class="empty-column">
+              <span class="empty-icon">📝</span>
+              <p>No tasks to do</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="kanban-column in-progress-column">
+        <div class="column-header">
+          <div class="column-title">
+            <span class="column-icon">⚙️</span>
+            <h2>{{ getStatusLabel(TaskStatus.IN_PROGRESS) }}</h2>
+          </div>
+          <span class="task-count">{{ inProgressTasks.length }}</span>
+        </div>
+        <div class="column-content">
+          @if (inProgressTasks.length > 0) {
+            @for (task of inProgressTasks; track task.id) {
+              <div class="task-card" (click)="onViewTask(task.id!)">
+                <div class="task-header">
+                  <h3 class="task-title">{{ task.title }}</h3>
+                  <div class="task-actions" (click)="$event.stopPropagation()">
+                    <button class="btn-action" (click)="onEditTask(task.id!)" title="Edit">
+                      ✏️
+                    </button>
+                    <button class="btn-action delete" (click)="onDeleteTask(task.id!)" title="Delete">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+                <div class="task-footer">
+                  @if (task.projectName) {
+                    <span class="task-project">
+                      <span class="project-icon">📁</span>
+                      {{ task.projectName }}
+                    </span>
+                  }
+                  @if (task.developerName) {
+                    <span class="task-assignee">
+                      <span class="assignee-icon">👤</span>
+                      {{ task.developerName }}
+                    </span>
+                  }
+                </div>
+                <div class="task-status-actions">
+                  <button 
+                    class="btn-status-change back" 
+                    (click)="$event.stopPropagation(); onStatusChange(task.id!, TaskStatus.TODO)"
+                    title="Move back to To Do">
+                    ← To Do
+                  </button>
+                  <button 
+                    class="btn-status-change" 
+                    (click)="$event.stopPropagation(); onStatusChange(task.id!, TaskStatus.DONE)"
+                    title="Move to Done">
+                    → Done
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
+            <div class="empty-column">
+              <span class="empty-icon">⚙️</span>
+              <p>No tasks in progress</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="kanban-column done-column">
+        <div class="column-header">
+          <div class="column-title">
+            <span class="column-icon">✅</span>
+            <h2>{{ getStatusLabel(TaskStatus.DONE) }}</h2>
+          </div>
+          <span class="task-count">{{ doneTasks.length }}</span>
+        </div>
+        <div class="column-content">
+          @if (doneTasks.length > 0) {
+            @for (task of doneTasks; track task.id) {
+              <div class="task-card" (click)="onViewTask(task.id!)">
+                <div class="task-header">
+                  <h3 class="task-title">{{ task.title }}</h3>
+                  <div class="task-actions" (click)="$event.stopPropagation()">
+                    <button class="btn-action" (click)="onEditTask(task.id!)" title="Edit">
+                      ✏️
+                    </button>
+                    <button class="btn-action delete" (click)="onDeleteTask(task.id!)" title="Delete">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+                <div class="task-footer">
+                  @if (task.projectName) {
+                    <span class="task-project">
+                      <span class="project-icon">📁</span>
+                      {{ task.projectName }}
+                    </span>
+                  }
+                  @if (task.developerName) {
+                    <span class="task-assignee">
+                      <span class="assignee-icon">👤</span>
+                      {{ task.developerName }}
+                    </span>
+                  }
+                </div>
+                <div class="task-status-actions">
+                  <button 
+                    class="btn-status-change back" 
+                    (click)="$event.stopPropagation(); onStatusChange(task.id!, TaskStatus.IN_PROGRESS)"
+                    title="Move back to In Progress">
+                    ← In Progress
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
+            <div class="empty-column">
+              <span class="empty-icon">✅</span>
+              <p>No completed tasks</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

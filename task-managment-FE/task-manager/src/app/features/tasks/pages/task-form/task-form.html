@@ -1,0 +1,138 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1 class="form-title">{{ pageTitle }}</h1>
+    <p class="form-subtitle">{{ isEditMode ? 'Update task information' : 'Fill in the details to create a new task' }}</p>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading task...</p>
+    </div>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <span class="error-icon">⚠️</span>
+      <p class="error-message">{{ error }}</p>
+    </div>
+  }
+
+  @if (!loading) {
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+      <div class="form-group">
+        <label for="title" class="form-label">
+          Title <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          id="title"
+          formControlName="title"
+          class="form-input"
+          [class.invalid]="titleControl?.invalid && titleControl?.touched"
+          placeholder="Enter task title"
+        />
+        @if (titleControl?.invalid && titleControl?.touched) {
+          <div class="error-messages">
+            @if (titleControl?.errors?.['required']) {
+              <p class="error-text">Title is required</p>
+            }
+            @if (titleControl?.errors?.['minlength']) {
+              <p class="error-text">Title must be at least 3 characters</p>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-textarea"
+          placeholder="Enter task description (optional)"
+          rows="4"
+        ></textarea>
+        <p class="form-hint">Provide additional details about the task</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status" class="form-label">
+            Status <span class="required">*</span>
+          </label>
+          <select
+            id="status"
+            formControlName="status"
+            class="form-select"
+            [class.invalid]="statusControl?.invalid && statusControl?.touched"
+          >
+            @for (status of taskStatuses; track status) {
+              <option [value]="status">{{ getStatusLabel(status) }}</option>
+            }
+          </select>
+          @if (statusControl?.invalid && statusControl?.touched) {
+            <div class="error-messages">
+              @if (statusControl?.errors?.['required']) {
+                <p class="error-text">Status is required</p>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="projectId" class="form-label">
+            Project <span class="required">*</span>
+          </label>
+          <select
+            id="projectId"
+            formControlName="projectId"
+            class="form-select"
+            [class.invalid]="projectIdControl?.invalid && projectIdControl?.touched"
+          >
+            <option value="">Select a project</option>
+            @for (project of projects; track project.id) {
+              <option [value]="project.id">{{ project.name }}</option>
+            }
+          </select>
+          @if (projectIdControl?.invalid && projectIdControl?.touched) {
+            <div class="error-messages">
+              @if (projectIdControl?.errors?.['required']) {
+                <p class="error-text">Project is required</p>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="developerId" class="form-label">Assign to Developer</label>
+        <select
+          id="developerId"
+          formControlName="developerId"
+          class="form-select"
+        >
+          <option value="">Unassigned</option>
+          @for (developer of developers; track developer.id) {
+            <option [value]="developer.id">{{ developer.name }}</option>
+          }
+        </select>
+        <p class="form-hint">Optionally assign this task to a developer</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-submit" [disabled]="taskForm.invalid || submitting">
+          @if (submitting) {
+            <span class="spinner-small"></span>
+          } @else {
+            <span class="btn-icon">💾</span>
+          }
+          {{ submitButtonText }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

@@ -26,5 +26,22 @@ export const routes: Routes = [
         loadComponent: () => import('./features/projects/pages/project-form/project-form').then(m => m.ProjectFormComponent)
       }
     ]
+  },
+  {
+    path: 'tasks',
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/tasks/pages/task-board/task-board').then(m => m.TaskBoardComponent)
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./features/tasks/pages/task-form/task-form').then(m => m.TaskFormComponent)
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () => import('./features/tasks/pages/task-form/task-form').then(m => m.TaskFormComponent)
+      }
+    ]
   }
 ];
