@@ -1,45 +1,51 @@
 <div class="project-list-container">
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">Projects</h1>
-      <p class="page-subtitle">Manage and track all your projects</p>
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Projects</h1>
+            <p class="page-subtitle">Manage and track all your projects</p>
+        </div>
+        <button class="btn-create" (click)="onCreateProject()">
+            <span class="btn-icon">➕</span>
+            Create Project
+        </button>
     </div>
-    <button class="btn-create" (click)="onCreateProject()">
-      <span class="btn-icon">➕</span>
-      Create Project
-    </button>
-  </div>
 
-  <div class="loading-container" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading projects...</p>
-  </div>
+    @if (loading){
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading projects...</p>
+    </div>
+    }
 
-  <div class="error-container" *ngIf="error && !loading">
-    <div class="error-icon">⚠️</div>
-    <p class="error-message">{{ error }}</p>
-    <button class="btn-retry" (click)="loadProjects()">
-      Try Again
-    </button>
-  </div>
+    @if (error && !loading){
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <p class="error-message">{{ error }}</p>
+        <button class="btn-retry" (click)="loadProjects()">
+            Try Again
+        </button>
+    </div>
+    }
 
-  <div class="empty-container" *ngIf="!loading && !error && projects.length === 0">
-    <div class="empty-icon">📁</div>
-    <h2 class="empty-title">No Projects Yet</h2>
-    <p class="empty-message">Get started by creating your first project</p>
-    <button class="btn-create-empty" (click)="onCreateProject()">
-      <span class="btn-icon">➕</span>
-      Create Your First Project
-    </button>
-  </div>
+    @if (!loading && !error && projects.length === 0){
+    <div class="empty-container">
+        <div class="empty-icon">📁</div>
+        <h2 class="empty-title">No Projects Yet</h2>
+        <p class="empty-message">Get started by creating your first project</p>
+        <button class="btn-create-empty" (click)="onCreateProject()">
+            <span class="btn-icon">➕</span>
+            Create Your First Project
+        </button>
+    </div>
+    }
 
-  <div class="projects-grid" *ngIf="!loading && !error && projects.length > 0">
-    <app-project-card
-      *ngFor="let project of projects"
-      [project]="project"
-      (viewDetails)="onViewDetails($event)"
-      (edit)="onEditProject($event)"
-      (delete)="onDeleteProject($event)">
-    </app-project-card>
-  </div>
+    @if (!loading && !error && projects.length > 0){
+    <div class="projects-grid">
+        @for (project of projects; track project.id){
+        <app-project-card [project]="project" (viewDetails)="onViewDetails($event)" (edit)="onEditProject($event)"
+            (delete)="onDeleteProject($event)">
+        </app-project-card>
+        }
+    </div>
+    }
 </div>
