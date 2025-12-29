@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, resource, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { firstValueFrom, map } from 'rxjs';
 import { ProjectService } from '../../../../core/services/project.service';
 import { Project } from '../../models/project.model';
 import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-project-details',
@@ -12,62 +14,34 @@ import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinn
   templateUrl: './project-details.html',
   styleUrls: ['./project-details.scss']
 })
-export class ProjectDetailsComponent implements OnInit {
-  project: Project | null = null;
-  loading = true;
-  error: string | null = null;
-  projectId!: number;
+export class ProjectDetailsComponent {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private projectService = inject(ProjectService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private projectService: ProjectService
-  ) {}
+  projectId = toSignal(
+    this.route.paramMap.pipe(map(pm => Number(pm.get('id')))),
+    { initialValue: 0 }
+  );
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.projectId = +params['id'];
-      this.loadProject();
+  projectResource = resource({
+    loader: () => firstValueFrom(this.projectService.getProjectById(this.projectId())),
     });
-  }
-
-  loadProject(): void {
-    this.loading = true;
-    this.error = null;
-
-    this.projectService.getProjectById(this.projectId).subscribe({
-      next: (project) => {
-        this.project = project;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = err.error?.message || 'Failed to load project details';
-        this.loading = false;
-        console.error('Error loading project:', err);
-      }
-    });
-  }
 
   editProject(): void {
-    this.router.navigate(['/projects', this.projectId, 'edit']);
+    this.router.navigate(['/projects', this.projectId(), 'edit']);
+    
   }
 
   deleteProject(): void {
-    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-      return;
-    }
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) return;
 
-    this.projectService.deleteProject(this.projectId).subscribe({
-      next: () => {
-        this.router.navigate(['/projects']);
-      },
-      error: (err) => {
-        this.error = err.error?.message || 'Failed to delete project';
-        console.error('Error deleting project:', err);
-      }
+    const id = this.projectId();
+    this.projectService.deleteProject(id).subscribe({
+      next: () => this.router.navigate(['/projects']),
+      error: (err) => console.error('Error deleting project:', err),
     });
   }
-
   goBack(): void {
     this.router.navigate(['/projects']);
   }

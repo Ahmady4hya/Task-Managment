@@ -1,20 +1,20 @@
 <div class="details-container">
-  @if (loading) {
+  @if (projectResource.isLoading()) {
     <app-spinner size="large" message="Loading project details..."></app-spinner>
   }
 
-  @if (error && !loading) {
+  @if (projectResource.error() && !projectResource.isLoading()) {
     <div class="error-container">
       <span class="error-icon">⚠️</span>
-      <p class="error-message">{{ error }}</p>
-      <button class="btn-retry" (click)="loadProject()">
+      <p class="error-message">Failed to load project details</p>
+      <button class="btn-retry" (click)="projectResource.reload()">
         <span>🔄</span>
         Retry
       </button>
     </div>
   }
 
-  @if (project && !loading && !error) {
+  @if (projectResource.value() && !projectResource.isLoading() && !projectResource.error()) {
     <div class="details-content">
       <div class="details-header">
         <div class="header-top">
@@ -33,9 +33,9 @@
             </button>
           </div>
         </div>
-        <h1 class="project-title">{{ project.name }}</h1>
-        @if (project.description) {
-          <p class="project-description">{{ project.description }}</p>
+        <h1 class="project-title">{{ projectResource.value()!.name }}</h1>
+        @if (projectResource.value()!.description) {
+          <p class="project-description">{{ projectResource.value()!.description }}</p>
         }
       </div>
 
@@ -43,21 +43,21 @@
         <div class="stat-card">
           <div class="stat-icon">👥</div>
           <div class="stat-content">
-            <div class="stat-value">{{ project.developerCount || 0 }}</div>
+            <div class="stat-value">{{ projectResource.value()!.developerCount || 0 }}</div>
             <div class="stat-label">Developers</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">📋</div>
           <div class="stat-content">
-            <div class="stat-value">{{ project.taskCount || 0 }}</div>
+            <div class="stat-value">{{ projectResource.value()!.taskCount || 0 }}</div>
             <div class="stat-label">Tasks</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">📅</div>
           <div class="stat-content">
-            <div class="stat-value">{{ project.createdAt | date: 'MMM d, y' }}</div>
+            <div class="stat-value">{{ projectResource.value()!.createdAt | date: 'MMM d, y' }}</div>
             <div class="stat-label">Created</div>
           </div>
         </div>
@@ -73,32 +73,32 @@
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Project Name</div>
-            <div class="info-value">{{ project.name }}</div>
+            <div class="info-value">{{ projectResource.value()!.name }}</div>
           </div>
-          @if (project.description) {
+          @if (projectResource.value()!.description) {
             <div class="info-item">
               <div class="info-label">Description</div>
-              <div class="info-value">{{ project.description }}</div>
+              <div class="info-value">{{ projectResource.value()!.description }}</div>
             </div>
           }
           <div class="info-item">
             <div class="info-label">Total Developers</div>
-            <div class="info-value">{{ project.developerCount || 0 }}</div>
+            <div class="info-value">{{ projectResource.value()!.developerCount || 0 }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Total Tasks</div>
-            <div class="info-value">{{ project.taskCount || 0 }}</div>
+            <div class="info-value">{{ projectResource.value()!.taskCount || 0 }}</div>
           </div>
-          @if (project.createdAt) {
+          @if (projectResource.value()!.createdAt) {
             <div class="info-item">
               <div class="info-label">Created At</div>
-              <div class="info-value">{{ project.createdAt | date: 'medium' }}</div>
+              <div class="info-value">{{ projectResource.value()!.createdAt | date: 'medium' }}</div>
             </div>
           }
-          @if (project.updatedAt) {
+          @if (projectResource.value()!.updatedAt) {
             <div class="info-item">
               <div class="info-label">Last Updated</div>
-              <div class="info-value">{{ project.updatedAt | date: 'medium' }}</div>
+              <div class="info-value">{{ projectResource.value()!.updatedAt | date: 'medium' }}</div>
             </div>
           }
         </div>
