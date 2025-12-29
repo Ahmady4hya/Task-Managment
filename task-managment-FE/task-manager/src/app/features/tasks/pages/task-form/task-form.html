@@ -5,10 +5,7 @@
   </div>
 
   @if (loading) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Loading task...</p>
-    </div>
+    <app-spinner size="medium" message="Loading task..."></app-spinner>
   }
 
   @if (error && !loading) {

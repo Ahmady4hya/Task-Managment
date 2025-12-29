@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TaskService } from '../../../../core/services/task.service';
 import { Task, TaskStatus } from '../../../projects/models/task.model';
+import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
 
 @Component({
   selector: 'app-task-board',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SpinnerComponent],
   templateUrl: './task-board.html',
   styleUrls: ['./task-board.scss']
 })

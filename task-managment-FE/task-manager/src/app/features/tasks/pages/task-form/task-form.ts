@@ -8,11 +8,12 @@ import { DeveloperService } from '../../../../core/services/developer.service';
 import { Task, TaskStatus } from '../../../projects/models/task.model';
 import { Project } from '../../../projects/models/project.model';
 import { Developer } from '../../../projects/models/developer.model';
+import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
 
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './task-form.html',
   styleUrls: ['./task-form.scss']
 })

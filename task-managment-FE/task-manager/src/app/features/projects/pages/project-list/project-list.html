@@ -10,24 +10,21 @@
         </button>
     </div>
 
-    @if (loading){
-    <div class="loading-container">
-        <div class="spinner"></div>
-        <p>Loading projects...</p>
-    </div>
+    @if (projectsResource.isLoading()){
+        <app-spinner size="large" message="Loading projects..."></app-spinner>
     }
 
-    @if (error && !loading){
+    @if (projectsResource.error() && !projectsResource.isLoading()){
     <div class="error-container">
         <div class="error-icon">⚠️</div>
-        <p class="error-message">{{ error }}</p>
-        <button class="btn-retry" (click)="loadProjects()">
+        <p class="error-message">Failed to load projects. Please try again.</p>
+        <button class="btn-retry" (click)="projectsResource.reload()">
             Try Again
         </button>
     </div>
     }
 
-    @if (!loading && !error && projects.length === 0){
+    @if (!projectsResource.isLoading() && !projectsResource.error() && projectsResource.value()?.length === 0){
     <div class="empty-container">
         <div class="empty-icon">📁</div>
         <h2 class="empty-title">No Projects Yet</h2>
@@ -39,9 +36,9 @@
     </div>
     }
 
-    @if (!loading && !error && projects.length > 0){
+    @if (!projectsResource.isLoading() && !projectsResource.error() && projectsResource.value() && projectsResource.value()!.length > 0){
     <div class="projects-grid">
-        @for (project of projects; track project.id){
+        @for (project of projectsResource.value()!; track project.id){
         <app-project-card [project]="project" (viewDetails)="onViewDetails($event)" (edit)="onEditProject($event)"
             (delete)="onDeleteProject($event)">
         </app-project-card>

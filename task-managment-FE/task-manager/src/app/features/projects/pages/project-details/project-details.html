@@ -1,9 +1,6 @@
 <div class="details-container">
   @if (loading) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Loading project details...</p>
-    </div>
+    <app-spinner size="large" message="Loading project details..."></app-spinner>
   }
 
   @if (error && !loading) {

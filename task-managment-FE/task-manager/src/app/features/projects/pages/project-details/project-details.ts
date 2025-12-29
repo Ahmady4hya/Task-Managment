@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../../../core/services/project.service';
 import { Project } from '../../models/project.model';
+import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SpinnerComponent],
   templateUrl: './project-details.html',
   styleUrls: ['./project-details.scss']
 })

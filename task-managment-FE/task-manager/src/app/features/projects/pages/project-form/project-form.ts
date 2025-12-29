@@ -4,10 +4,11 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../../../../core/services/project.service';
 import { Project } from '../../models/project.model';
+import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
 
 @Component({
   selector: 'app-project-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './project-form.html',
   styleUrl: './project-form.scss',
   standalone: true

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DeveloperService } from '../../../../core/services/developer.service';
 import { Developer } from '../../../projects/models/developer.model';
+import { SpinnerComponent } from '../../../../shared/ui-components/spinner/spinner';
 
 @Component({
   selector: 'app-developer-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SpinnerComponent],
   templateUrl: './developer-list.html',
   styleUrls: ['./developer-list.scss']
 })
