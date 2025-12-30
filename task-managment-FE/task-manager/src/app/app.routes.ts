@@ -32,15 +32,15 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/tasks/pages/task-board/task-board').then(m => m.TaskBoardComponent)
+        loadComponent: () => import('./features/projects/pages/task-board/task-board').then(m => m.TaskBoardComponent)
       },
       {
         path: 'new',
-        loadComponent: () => import('./features/tasks/pages/task-form/task-form').then(m => m.TaskFormComponent)
+        loadComponent: () => import('./features/projects/pages/task-form/task-form').then(m => m.TaskFormComponent)
       },
       {
         path: ':id/edit',
-        loadComponent: () => import('./features/tasks/pages/task-form/task-form').then(m => m.TaskFormComponent)
+        loadComponent: () => import('./features/projects/pages/task-form/task-form').then(m => m.TaskFormComponent)
       }
     ]
   },
@@ -49,15 +49,15 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/developers/pages/developer-list/developer-list').then(m => m.DeveloperListComponent)
+        loadComponent: () => import('./features/projects/pages/developer-list/developer-list').then(m => m.DeveloperListComponent)
       },
       {
         path: 'new',
-        loadComponent: () => import('./features/developers/pages/developer-form/developer-form').then(m => m.DeveloperFormComponent)
+        loadComponent: () => import('./features/projects/pages/developer-form/developer-form').then(m => m.DeveloperFormComponent)
       },
       {
         path: ':id/edit',
-        loadComponent: () => import('./features/developers/pages/developer-form/developer-form').then(m => m.DeveloperFormComponent)
+        loadComponent: () => import('./features/projects/pages/developer-form/developer-form').then(m => m.DeveloperFormComponent)
       }
     ]
   }
